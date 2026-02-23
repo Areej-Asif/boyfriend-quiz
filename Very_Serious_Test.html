@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ultimate Girlfriend Exam 💘</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    text-align:center;
+    overflow:hidden;
+    background:linear-gradient(-45deg,#ff9acb,#ffd6eb,#ffc3e6,#ff8fcf);
+    background-size:400% 400%;
+    animation:gradient 10s ease infinite;
+    color:#222;
+}
+
+@keyframes gradient{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+h1{margin-top:40px;font-size:40px;}
+h3{font-size:22px;}
+
+.container{
+    margin-top:30px;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    position:relative;
+}
+
+button{
+    padding:12px 22px;
+    margin:10px;
+    font-size:16px;
+    border-radius:12px;
+    border:none;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{transform:scale(1.1);}
+
+#timer,#score{margin-top:10px;font-size:18px;}
+
+#nextBtn{display:none;background:#111;color:white;}
+
+.celebrate{
+    position:absolute;
+    font-size:24px;
+    animation:floatUp 3s linear forwards;
+}
+
+@keyframes floatUp{
+    from{transform:translateY(0);opacity:1;}
+    to{transform:translateY(-800px);opacity:0;}
+}
+
+.lockScreen{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:#000000dd;
+    color:white;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+}
+
+input{
+    padding:10px;
+    font-size:18px;
+    border-radius:8px;
+    border:none;
+}
+
+.certificate{
+    border:6px solid #ff3399;
+    padding:40px;
+    margin:60px;
+    border-radius:20px;
+    background:white;
+}
+</style>
+</head>
+
+<body>
+
+<div class="lockScreen" id="lock">
+<h1>🔒 Access Locked</h1>
+<p>Type the magic sentence to start:</p>
+<p><b>I love Areej</b></p>
+<input id="unlockInput" placeholder="Type here..." />
+<button onclick="unlock()">Unlock 💘</button>
+</div>
+
+<h1>Ultimate Girlfriend Exam 😌💗</h1>
+<div id="timer">Time: 15</div>
+<div id="score">Score: 0%</div>
+<h3 id="question"></h3>
+
+<div class="container" id="options"></div>
+<button id="nextBtn" onclick="nextQuestion()">Next ➡</button>
+
+<audio autoplay loop>
+<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
+</audio>
+
+<script>
+let step=0;
+let score=0;
+let timeLeft=15;
+let timerInterval;
+
+const quiz=[
+{q:"Who is the prettiest girl in your life?",
+options:["A celebrity","Your female best friend","Areej ❤️","Some random girl"]},
+{q:"Who do you miss the most?",
+options:["Your bro","Your sister","Areej ❤️","Football team"]},
+{q:"Who makes your day better instantly?",
+options:["Coffee","Reels","Areej ❤️","Gym"]},
+{q:"Who do you want forever? 💍",
+options:["Your car","Travel buddy","Areej ❤️","PS5"]},
+{q:"Who understands you the most?",
+options:["Google","ChatGPT","Areej ❤️","Your bro"]},
+{q:"Who owns your heart?",
+options:["Nobody","Maybe","Areej ❤️","Still deciding"]}
+];
+
+function unlock(){
+let input=document.getElementById("unlockInput").value;
+if(input.trim()==="I love Areej"){
+document.getElementById("lock").style.display="none";
+loadQuestion();
+}else{
+alert("Wrong password 😏 Try again.");
+}
+}
+
+function startTimer(){
+timeLeft=15;
+document.getElementById("timer").innerText="Time: "+timeLeft;
+timerInterval=setInterval(()=>{
+timeLeft--;
+document.getElementById("timer").innerText="Time: "+timeLeft;
+if(timeLeft<=0){
+clearInterval(timerInterval);
+nextQuestion();
+}
+},1000);
+}
+
+function loadQuestion(){
+clearInterval(timerInterval);
+startTimer();
+document.getElementById("question").innerText=quiz[step].q;
+document.getElementById("options").innerHTML="";
+document.getElementById("nextBtn").style.display="none";
+
+let options=[...quiz[step].options];
+let correctIndex=Math.floor(Math.random()*options.length);
+options=options.filter(o=>o!=="Areej ❤️");
+options.splice(correctIndex,0,"Areej ❤️");
+
+options.forEach(option=>{
+let btn=document.createElement("button");
+btn.innerText=option;
+
+if(option==="Areej ❤️"){
+btn.style.background="#ff3399";
+btn.style.color="white";
+btn.onclick=()=>{
+if(confirm("Are you sure? 😌")){
+correctAnswer();
+}
+};
+}else{
+btn.style.background="#eee";
+btn.onmouseover=function(){
+btn.style.position="absolute";
+btn.style.left=Math.random()*(window.innerWidth-150)+"px";
+btn.style.top=Math.random()*(window.innerHeight-100)+"px";
+};
+}
+document.getElementById("options").appendChild(btn);
+});
+}
+
+function correctAnswer(){
+clearInterval(timerInterval);
+score++;
+updateScore();
+miniCelebrate();
+document.getElementById("nextBtn").style.display="inline-block";
+}
+
+function updateScore(){
+let percent=Math.round((score/quiz.length)*100);
+document.getElementById("score").innerText="Score: "+percent+"%";
+}
+
+function nextQuestion(){
+step++;
+if(step<quiz.length){
+loadQuestion();
+}else{
+finalScreen();
+}
+}
+
+function miniCelebrate(){
+for(let i=0;i<20;i++){
+let el=document.createElement("div");
+el.className="celebrate";
+el.innerText=["💖","✨","🎉","💋","🌸"][Math.floor(Math.random()*5)];
+el.style.left=Math.random()*window.innerWidth+"px";
+el.style.top=Math.random()*window.innerHeight+"px";
+document.body.appendChild(el);
+setTimeout(()=>el.remove(),3000);
+}
+}
+
+function finalScreen(){
+let percent=Math.round((score/quiz.length)*100);
+
+if(percent===100){
+document.body.innerHTML=
+"<div class='certificate'>"+
+"<h1>🎊 Certified Loyal Boyfriend 🎊</h1>"+
+"<h2>Final Score: "+percent+"%</h2>"+
+"<h2>You chose Areej every time 😌💘</h2>"+
+"<h2>Reward: 💋 Kiss + 🤗 Hugs + 💍 Forever Love</h2>"+
+"</div>";
+megaCelebrate();
+}else{
+document.body.innerHTML=
+"<h1>😈 Suspicious Behavior Detected</h1>"+
+"<h2>Final Score: "+percent+"%</h2>"+
+"<h2>We need to talk. 😏</h2>";
+}
+}
+
+function megaCelebrate(){
+setInterval(()=>{
+let el=document.createElement("div");
+el.className="celebrate";
+el.innerText=["💖","🎉","✨","💋","💘","🌹","🎊"][Math.floor(Math.random()*7)];
+el.style.left=Math.random()*window.innerWidth+"px";
+el.style.top=window.innerHeight+"px";
+document.body.appendChild(el);
+setTimeout(()=>el.remove(),3000);
+},150);
+}
+</script>
+
+</body>
+</html>
